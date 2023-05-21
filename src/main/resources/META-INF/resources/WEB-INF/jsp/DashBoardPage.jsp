@@ -51,6 +51,7 @@
         <table class="table table-bordered">
             <thead class="thead-dark">
             <tr>
+                <th>img: </th>
                 <th>File name: </th>
                 <th>Description: </th>
                 <th>Date of upload: </th>
@@ -60,6 +61,7 @@
             <tbody>
             <c:forEach items="${fileInfos}" var="FileInfo">
                 <tr>
+                    <td><img src="https://easy-files-s3.s3.eu-north-1.amazonaws.com/${FileInfo.name}" alt="img" width="200" height="150"/></td>
                     <td>${FileInfo.name}</td>
                     <td>${FileInfo.description}</td>
                     <td>${FileInfo.localDate}</td>

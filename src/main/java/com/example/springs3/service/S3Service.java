@@ -3,7 +3,6 @@ package com.example.springs3.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,8 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class S3Service implements FileServiceImpl {
-    @Value("${bucketName}")
-    private String bucketName;
+    private String bucketName = "easy-files-s3";
     private final AmazonS3 s3;
 
     public S3Service(AmazonS3 s3) {

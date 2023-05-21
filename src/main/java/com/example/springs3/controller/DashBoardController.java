@@ -3,7 +3,6 @@ package com.example.springs3.controller;
 import com.example.springs3.FileInfo.FileInfo;
 import com.example.springs3.FileInfo.FileInfoRepository;
 import com.example.springs3.service.S3Service;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,43 +28,39 @@ public class DashBoardController {
     private S3Service s3Service;
 
     int id = 1;
-
-    @RequestMapping(value = "/dashboard",method = RequestMethod.GET)
-    public String displayDashBoard(ModelMap model){
+    String url = "${URL}";
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    public String getHomePage(ModelMap model){
         List<FileInfo> fileInfos = fileInfoRepository.findAll();
         model.addAttribute("fileInfos",fileInfos);
-        return "DashBoardPage";
+        return "index";
     }
 
     @GetMapping("delete/{filename}")
     public String deleteFile(@PathVariable("filename") String filename){
-
             int fileToBeDeletedId = fileInfoRepository.getFileInfoByName(filename).getId();
             fileInfoRepository.deleteById(fileToBeDeletedId);
             s3Service.deleteFile(filename);
-
-        return "redirect:/dashboard";
+        return "redirect:/";
 
     }
-    @GetMapping("/upload")
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String displayUploadPage(){
-        return "UploadPage";
+        return "upload";
     }
 
     @PostMapping("/saveFile")
     public String submitUploadForm(@Valid @RequestParam("file") MultipartFile file, @Valid @RequestParam("description") String description){
         String nameOfTheFile = file.getOriginalFilename();
+        String imageURL = url+nameOfTheFile;
         if (fileInfoRepository.existsByName(nameOfTheFile)){
             return "file already exists";
         }
-        FileInfo fileToBeSaved = new FileInfo(id++,file.getOriginalFilename(),description, LocalDate.now());
+        FileInfo fileToBeSaved = new FileInfo(id++,file.getOriginalFilename(),description, LocalDate.now(),imageURL);
         fileInfoRepository.save(fileToBeSaved);
         s3Service.saveFile(file);
-        /*
 
-       return
-         */
-        return "redirect:/dashboard";
+        return "redirect:/";
 
     }
 
